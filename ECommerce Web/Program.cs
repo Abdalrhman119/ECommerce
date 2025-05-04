@@ -1,8 +1,13 @@
 
+using AutoMapper;
 using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
+using Persistence.Repositaries;
+using Services;
+using Services.Mapping;
+using ServicesAbstraction;
 
 namespace ECommerce_Web
 {
@@ -21,6 +26,13 @@ namespace ECommerce_Web
             builder.Services.AddDbContext<StoreDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.AddScoped<PictureUrlResolver>();
+            builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
+
+
 
 
             var app = builder.Build();
@@ -43,6 +55,12 @@ namespace ECommerce_Web
 
             app.Run();
         }
+
+        private static Action<IMapperConfigurationExpression> Typeof()
+        {
+            throw new NotImplementedException();
+        }
+
         public static async Task InitializeDbAsync(WebApplication app)
         {
             using var scope = app.Services.CreateScope();
