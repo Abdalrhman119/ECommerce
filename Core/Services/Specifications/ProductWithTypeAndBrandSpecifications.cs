@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Products;
 using Shared.DTO;
 using Shared.Enums;
 using System.Linq.Expressions;

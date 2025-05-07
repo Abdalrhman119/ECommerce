@@ -1,5 +1,5 @@
 ﻿using Domain.Contracts;
-using Domain.Models;
+using Domain.Models.Products;
 using Persistence.Data;
 using System.Text.Json;
 

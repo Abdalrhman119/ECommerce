@@ -31,7 +31,7 @@ namespace Persistence.Repositaries
 
         }
 
-        public async Task<TEntity> GetByIdAsync(ISpecifications<TEntity> specifications)
+        public async Task<TEntity?> GetByIdAsync(ISpecifications<TEntity> specifications)
         {
 
             var res = await SpecificationEvaluator
@@ -49,5 +49,7 @@ namespace Persistence.Repositaries
 
             return res;
         }
+        public async Task<int> CountAsync(ISpecifications<TEntity> specifications) =>
+    await SpecificationEvaluator.CreateQuery(_storeDbContext.Set<TEntity>(), specifications).CountAsync();
     }
 }

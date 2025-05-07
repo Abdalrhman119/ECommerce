@@ -9,6 +9,7 @@ namespace Domain.Contracts
 {
     public interface IGenericRepositary<TEntity,TKey> where TEntity : BaseEntity<TKey>
     {
+        Task<int> CountAsync(ISpecifications<TEntity> specifications);
         void Add(TEntity entity);
         void Delete(TEntity entity);
         void Update(TEntity entity);
@@ -18,7 +19,7 @@ namespace Domain.Contracts
         Task<IEnumerable<TEntity>> GetAllAsync();
 
 
-        Task<TEntity> GetByIdAsync(ISpecifications<TEntity> specifications);
+        Task<TEntity?> GetByIdAsync(ISpecifications<TEntity> specifications);
 
         Task<IEnumerable<TEntity>> GetAllAsync(ISpecifications<TEntity> specifications);
 

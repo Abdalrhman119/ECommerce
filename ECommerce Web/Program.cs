@@ -1,6 +1,9 @@
 
 using AutoMapper;
 using Domain.Contracts;
+using ECommerce_Web.Factories;
+using ECommerce_Web.Middelwares;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
@@ -8,6 +11,7 @@ using Persistence.Repositaries;
 using Services;
 using Services.Mapping;
 using ServicesAbstraction;
+using Shared.ErrorModels;
 
 namespace ECommerce_Web
 {
@@ -18,26 +22,20 @@ namespace ECommerce_Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<StoreDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
-            builder.Services.AddScoped<PictureUrlResolver>();
-            builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
+            builder.Services.AddInfrastructureRegisteration(builder.Configuration);
+            builder.Services.AddAplicationServices();
+            builder.Services.AddWebApplicationServices();
 
 
+            //builder.Services.AddScoped<PictureUrlResolver>();
 
 
             var app = builder.Build();
 
-            await InitializeDbAsync(app);
+            await app.InitializeDbAsync();
+
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -54,18 +52,6 @@ namespace ECommerce_Web
             app.MapControllers();
 
             app.Run();
-        }
-
-        private static Action<IMapperConfigurationExpression> Typeof()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static async Task InitializeDbAsync(WebApplication app)
-        {
-            using var scope = app.Services.CreateScope();
-            var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-            await dbInitializer.InitializeAsync();
         }
     }
 }
