@@ -25,6 +25,7 @@ namespace ECommerce_Web
             builder.Services.AddInfrastructureRegisteration(builder.Configuration);
             builder.Services.AddAplicationServices();
             builder.Services.AddWebApplicationServices();
+        
 
 
             //builder.Services.AddScoped<PictureUrlResolver>();

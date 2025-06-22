@@ -29,13 +29,14 @@ namespace ECommerce_Web
             services.AddSwaggerGen();
         }
 
-        public static async Task InitializeDbAsync(this WebApplication app)
+        public static async Task<WebApplication> InitializeDbAsync(this WebApplication app)
         {
 
             using var Scope = app.Services.CreateScope(); 
             var dbInitializer = Scope.ServiceProvider.GetRequiredService<IDbInitializer>();
             await dbInitializer.InitializeAsync();
-
+            await dbInitializer.InitializeIdentityAsync();
+            return app;
         }
 
     }

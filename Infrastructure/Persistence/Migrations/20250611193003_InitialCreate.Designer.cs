@@ -8,10 +8,10 @@ using Persistence.Data;
 
 #nullable disable
 
-namespace Persistence.Data.Migrations
+namespace Persistence.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20250425062010_InitialCreate")]
+    [Migration("20250611193003_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace Persistence.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.Product", b =>
+            modelBuilder.Entity("Domain.Models.Products.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace Persistence.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Domain.Models.ProductBrand", b =>
+            modelBuilder.Entity("Domain.Models.Products.ProductBrand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,7 +80,7 @@ namespace Persistence.Data.Migrations
                     b.ToTable("ProductBrands");
                 });
 
-            modelBuilder.Entity("Domain.Models.ProductType", b =>
+            modelBuilder.Entity("Domain.Models.Products.ProductType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,15 +97,15 @@ namespace Persistence.Data.Migrations
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("Domain.Models.Product", b =>
+            modelBuilder.Entity("Domain.Models.Products.Product", b =>
                 {
-                    b.HasOne("Domain.Models.ProductBrand", "ProductBrand")
+                    b.HasOne("Domain.Models.Products.ProductBrand", "ProductBrand")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.ProductType", "ProductType")
+                    b.HasOne("Domain.Models.Products.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
