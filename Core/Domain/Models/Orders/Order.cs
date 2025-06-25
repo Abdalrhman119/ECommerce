@@ -15,6 +15,19 @@ namespace Domain.Models.Orders
 
     public class Order : BaseEntity<Guid>
     {
+        public Order()
+        {
+            
+        }
+
+        public Order(string userEmail, List<OrderItem> items, OrderAddress address, decimal subTotal, DeliveryMethod deliveryMethod)
+        {
+            UserEmail = userEmail;
+            Items = items;
+            Address = address;
+            SubTotal = subTotal;
+            DeliveryMethod = deliveryMethod;
+        }
 
         public string UserEmail { get; set; }
 
