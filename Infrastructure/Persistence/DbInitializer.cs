@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using Domain.Models.Identity;
+using Domain.Models.Orders;
 using Domain.Models.Products;
 using Microsoft.AspNetCore.Identity;
 using Persistence.Data;
@@ -53,6 +54,16 @@ namespace Persistence
                         await _storeDbContext.SaveChangesAsync();
                     }
                 }
+                if (!_storeDbContext.Set<DeliveryMethod>().Any()) 
+                {
+                    var data = await File.ReadAllTextAsync(@"..\infrastructure\Persistence\Data\Seeding\deliveryMethods.json");
+                    var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(data);
+                    if (deliveryMethods is not null && deliveryMethods.Any())
+                    {
+                        _storeDbContext.Set<DeliveryMethod>().AddRange(deliveryMethods);
+                        await _storeDbContext.SaveChangesAsync();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -96,7 +107,7 @@ namespace Persistence
                     };
 
                     await _userManager.CreateAsync(superAdminUser, "P@ssw0rd");
-                    await _userManager.CreateAsync(AdminUser, "password");
+                    await _userManager.CreateAsync(AdminUser, "P@ssw0rd");
 
                     await _userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
                     await _userManager.AddToRoleAsync(AdminUser, "Admin");
