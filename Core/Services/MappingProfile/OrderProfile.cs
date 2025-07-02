@@ -23,7 +23,8 @@ namespace Services.MappingProfile
 
             CreateMap<Order, OrderResponse>()
                 .ForMember(dest => dest.DeliveryMethod, opt => opt.MapFrom(src => src.DeliveryMethod.ShortName))
-                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.SubTotal + src.DeliveryMethod.Price));
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.SubTotal + src.DeliveryMethod.Cost))
+                .ForMember(dest => dest.DeliveryCost, opt => opt.MapFrom(src => src.DeliveryMethod.Cost));
             CreateMap<DeliveryMethod, DeliveryMethodResponse>();
         }
 

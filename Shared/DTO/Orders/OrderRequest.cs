@@ -12,7 +12,7 @@ namespace Shared.DTO.Orders
 
         public string BasketId { get; set; }
 
-        public AddressDto Address { get; set; }
+        public AddressDto ShipToAddress { get; set; }
 
         public int DeliveryMethodId { get; set; }
 

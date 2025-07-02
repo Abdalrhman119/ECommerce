@@ -2,6 +2,7 @@
 using ECommerce_Web.Factories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shared.Authentication;
@@ -22,6 +23,14 @@ namespace ECommerce.Web
                 options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
             });
             services.ConfigureJWT(configuration);
+            services.AddCors(options => 
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+
+                });
+            });
             return services;
         }
 

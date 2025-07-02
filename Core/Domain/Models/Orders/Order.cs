@@ -20,28 +20,29 @@ namespace Domain.Models.Orders
             
         }
 
-        public Order(string userEmail, List<OrderItem> items, OrderAddress address, decimal subTotal, DeliveryMethod deliveryMethod)
+        public Order(string userEmail, List<OrderItem> items, OrderAddress address, decimal subTotal, DeliveryMethod deliveryMethod, string paymentIntentId)
         {
-            UserEmail = userEmail;
+            BuyerEmail = userEmail;
             Items = items;
-            Address = address;
+            ShipToAddress = address;
             SubTotal = subTotal;
             DeliveryMethod = deliveryMethod;
+            PaymentIntentId = paymentIntentId;
         }
 
-        public string UserEmail { get; set; }
+        public string BuyerEmail { get; set; }
 
         public List<OrderItem> Items { get; set; } = [];
 
-        public OrderAddress Address { get; set; }
+        public OrderAddress ShipToAddress { get; set; }
 
-        public string PaymentIntentId { get; set; } = string.Empty;
+        public string PaymentIntentId { get; set; }
 
         public decimal SubTotal { get; set; }
 
-        public DateTimeOffset Date { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
 
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+        public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
 
         public DeliveryMethod DeliveryMethod { get; set; }
 

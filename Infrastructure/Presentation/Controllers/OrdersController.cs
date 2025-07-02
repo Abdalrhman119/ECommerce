@@ -9,7 +9,7 @@ namespace Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OrderController(IServiceManager _serviceManager) : ControllerBase
+    public class OrdersController(IServiceManager _serviceManager) : ControllerBase
     {
 
         [HttpPost]

@@ -12,8 +12,7 @@ using Services;
 using Services.Mapping;
 using ServicesAbstraction;
 using Shared.ErrorModels;
-using Presentation.Controllers; // Ensure your controllers' namespace is referenced
-
+using Presentation.Controllers;
 namespace ECommerce_Web
 {
     public class Program
@@ -31,25 +30,49 @@ namespace ECommerce_Web
             builder.Services.AddEndpointsApiExplorer(); // Required for Swagger
             builder.Services.AddSwaggerGen(); // Registers Swagger generator
 
-            var app = builder.Build();
+            //
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+            //
+            
 
+            var app = builder.Build();
+            //
+            app.UseStaticFiles();
+            //
             await app.InitializeDbAsync();
 
             app.UseMiddleware<CustomExceptionHandlerMiddleware>();
-
+            //
+            app.UseCors("AllowAngularApp");
+            //
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.DocumentTitle = "ECommerce App";
+                    options.EnableFilter();
+                    options.DisplayRequestDuration();
+                });
             }
+            //app.UseCors("CorsPolicy");
+
 
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllers(); // This enables attribute routing for controllers
+            app.MapControllers(); 
 
             app.Run();
         }

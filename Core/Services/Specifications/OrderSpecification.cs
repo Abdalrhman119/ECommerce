@@ -20,7 +20,7 @@ namespace Services.Specifications
         }
 
         //Get All
-        public OrderSpecification(string email) : base(O => O.UserEmail == email)
+        public OrderSpecification(string email) : base(O => O.BuyerEmail == email)
         {
 
             AddInclude(o => o.Items);

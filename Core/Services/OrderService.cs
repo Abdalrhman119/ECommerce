@@ -26,7 +26,17 @@ namespace Services
         {
             var basket = await _basketRepository.GetAsync(orderRequest.BasketId)
                 ?? throw new BasketNotFoundException(orderRequest.BasketId);
+            var orderRepo = _unitOfWork.GetRepositary<Order, Guid>(); 
 
+            var specs = new OrderWithPaymentIntentSpecification(basket.PaymentIntentId);
+
+            var existingOrder = await orderRepo.GetByIdAsync(specs);
+
+
+            if (existingOrder is not null)
+            {
+                orderRepo.Delete(existingOrder);
+            }
             List<OrderItem> items = [];
 
             foreach (var item in basket.Items)
@@ -42,17 +52,16 @@ namespace Services
                                           .GetByIdAsync(orderRequest.DeliveryMethodId)
                                           ?? throw new DeliveryMethodNotFoundException(orderRequest.DeliveryMethodId);
 
-            var Address = _mapper.Map<OrderAddress>(orderRequest.Address);
+            var Address = _mapper.Map<OrderAddress>(orderRequest.ShipToAddress);
 
             var SubTotal = items.Sum(i => i.Price * i.Quantity);
 
-            var Order = new Order(email, items, Address, SubTotal, method);
-
-            var orderRepo = _unitOfWork.GetRepositary<Order, Guid>();
+            var Order = new Order(email, items, Address, SubTotal, method, basket.PaymentIntentId);
+            //Order.DeliveryMethodId = method.Id;///////////
             orderRepo.Add(Order);
             await _unitOfWork.SaveChanges();
 
-            await _basketRepository.DeleteAsync(orderRequest.BasketId);
+            //await _basketRepository.DeleteAsync(orderRequest.BasketId);
 
             return _mapper.Map<OrderResponse>(Order);
         }

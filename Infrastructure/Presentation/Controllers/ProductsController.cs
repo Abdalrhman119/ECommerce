@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Attributes;
 using ServicesAbstraction;
 using Shared;
 using Shared.DTO;
@@ -18,6 +19,7 @@ namespace Presentation.Controllers
     public class ProductsController(IServiceManager _serviceManager) : ControllerBase
     {
         [HttpGet]
+        [ReddisCache]
         public async Task<ActionResult<PaginatedResponse<ProductResponse>>> GetAllProducts([FromQuery] ProductQueryParameters productQueryParameters)
         {
             var products = await _serviceManager.ProductService.GetAllProductsAsync(productQueryParameters);
